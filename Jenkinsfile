@@ -61,7 +61,7 @@ pipeline {
                         TASK_DEFINITION_REVISION=$(aws ecs describe-task-definition --task-definition $AWS_TASK_DEFINITION | jq -r '.taskDefinition.revision')
                         echo "Task Definition Revision: $TASK_DEFINITION_REVISION"
                         aws ecs update-service --cluster $AWS_ECS_CLUSTER --service $AWS_ECS_SERVICE --task-definition $AWS_TASK_DEFINITION:$TASK_DEFINITION_REVISION
-                        aws ecs wait services-stable --cluster $AWS_ECS_CLUSTER --services $AWS_ECS_SERVICE
+                        #aws ecs wait services-stable --cluster $AWS_ECS_CLUSTER --services $AWS_ECS_SERVICE
                     '''
                 }
             }
