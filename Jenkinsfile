@@ -2,9 +2,8 @@ pipeline {
     agent any
 
     environment {
-        NETLIFY_SITE_ID = 'fb4d5b69-42e8-4400-adf4-ecbf7de66d89'
-    //     NETLIFY_AUTH_TOKEN = credentials('netlify-token')
-    //     REACT_APP_VERSION = "1.0.$BUILD_ID"
+        APP_NAME = 'LearnJenkinsApp'
+        REACT_APP_VERSION = "1.0.$BUILD_ID"
         AWS_DEFAULT_REGION = 'ap-south-1'
         AWS_ECS_CLUSTER = 'LearnJenkinsApp-Cluster-Prod'
         AWS_ECS_SERVICE = 'LearnJenkinsApp-Service-Prod'
@@ -45,7 +44,7 @@ pipeline {
             steps {
                 sh '''
                     amazon-linux-extras install docker
-                    docker build -t myjenkinsapp .
+                    docker build -t $APP_NAME:$REACT_APP_VERSION .
                 '''
             }
         }
@@ -54,7 +53,7 @@ pipeline {
             agent {
                 docker {
                     image 'my-aws-cli'
-                    args "--entrypoint=''"
+                    args "-u root --entrypoint=''"
                     reuseNode true
                 }
             }
