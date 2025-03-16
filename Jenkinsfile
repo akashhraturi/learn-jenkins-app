@@ -43,7 +43,6 @@ pipeline {
 
             steps {
                 sh '''
-                    amazon-linux-extras install docker
                     docker build -t $APP_NAME:$REACT_APP_VERSION .
                 '''
             }
@@ -53,7 +52,7 @@ pipeline {
             agent {
                 docker {
                     image 'my-aws-cli'
-                    args "-u root --entrypoint=''"
+                    args "--entrypoint=''"
                     reuseNode true
                 }
             }
@@ -66,7 +65,6 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'my-aws', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
                     sh '''
                         aws --version
-                        yum install -y jq
                         aws ecs register-task-definition --cli-input-json file://aws/task-definition-prod.json
                         TASK_DEFINITION_REVISION=$(aws ecs describe-task-definition --task-definition $AWS_TASK_DEFINITION | jq -r '.taskDefinition.revision')
                         echo "Task Definition Revision: $TASK_DEFINITION_REVISION"
