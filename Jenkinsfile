@@ -32,6 +32,7 @@ pipeline {
                         TASK_DEFINITION_REVISION=$(aws ecs describe-task-definition --task-definition LearnJenkinsApp-TaskDefinition-Prod | jq -r '.taskDefinition.revision')
                         echo "Task Definition Revision: $TASK_DEFINITION_REVISION"
                         aws ecs update-service --cluster LearnJenkinsApp-Cluster-Prod --service LearnJenkinsApp-Service-Prod --task-definition LearnJenkinsApp-TaskDefinition-Prod:$TASK_DEFINITION_REVISION
+                        aws ecs wait services-stable --cluster LearnJenkinsApp-Cluster-Prod --services LearnJenkinsApp-Service-Prod
                     '''
                 }
             }
