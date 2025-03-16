@@ -70,6 +70,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'my-aws', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
                     sh '''
                         aws --version
+                        sed -i "s/#APP_VERSION#/$REACT_APP_VERSION/g" aws/task-definition-prod.json
                         aws ecs register-task-definition --cli-input-json file://aws/task-definition-prod.json
                         TASK_DEFINITION_REVISION=$(aws ecs describe-task-definition --task-definition $AWS_TASK_DEFINITION | jq -r '.taskDefinition.revision')
                         echo "Task Definition Revision: $TASK_DEFINITION_REVISION"
